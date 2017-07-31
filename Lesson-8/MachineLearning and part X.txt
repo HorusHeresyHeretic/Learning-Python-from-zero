@@ -1,0 +1,805 @@
+
+Pandas — это библиотека Python, предоставляющая широкие возможности для анализа данных. Данные,
+с которыми работают датасаентисты, часто хранятся в форме табличек — например, в форматах .csv,
+.tsv или .xlsx. С помощью библиотеки Pandas такие табличные данные очень удобно загружать,
+обрабатывать и анализировать с помощью SQL-подобных запросов. А в связке с библиотеками
+Matplotlib и Seaborn Pandas предоставляет широкие возможности визуального анализа 
+табличных данных.
+
+Основными структурами данных в Pandas являются классы Series и DataFrame.
+
+Первый из них представляет собой одномерный индексированный массив данных некоторого фиксированного 
+типа.
+
+Второй – это двухмерная структура данных, представляющая собой таблицу, каждый столбец которой
+содержит данные одного типа. Можно представлять её как словарь объектов типа Series. 
+
+Структура DataFrame отлично подходит для представления реальных данных: строки соответствуют
+признаковым описаниям отдельных объектов, а столбцы соответствуют признакам.
+
+Будем показывать основные методы в деле, анализируя набор данных по оттоку клиентов телеком-
+оператора. Прочитаем данные (метод read_csv) и посмотрим на первые 5 строк с помощью метода 
+head():
+
+#1 и первое что мы узнаем - это тот факт что при работе с Анакондой адрес файла нужно указывать с
+использованиемпрямого слеша.
+
+прямой слеш /
+обратный слеш \
+
+адрес файла в винде выглядит так
+
+J:\HiEnd\mlcourse_open-master\mlcourse_open-master\data
+
+на это Анакодна возвращает кучу исключений вида - иди нахуй.
+
+лорный адрес Анаконды  J:/HiEnd/mlcourse_open-master/mlcourse_open-master/data/telecom_churn.csv"
+
+#2
+
+По умолчанию Pandas выводит всего 20 столбцов и 60 строк, поэтому если ваш датафрейм больше,
+воспользуйтесь функцией set_option:
+
+#3
+
+Каждая строка представляет собой одного клиента – это объект исследования.
+Столбцы – признаки объекта. 
+
+Целевая переменная: Churn – Признак оттока, бинарный признак (1 – потеря клиента, то есть отток).
+Потом мы будем строить модели, прогнозирующие этот признак по остальным, поэтому мы и назвали
+его целевым.
+
+#4
+
+Посмотрим на размер данных, названия признаков и их типы.
+
+print(name.columns)	- возвращает имена столбцов в файле name
+
+>>> print(df.columns)		
+Index(['State', 'Account length', 'Area code', 'International plan',
+       'Voice mail plan', 'Number vmail messages', 'Total day minutes',
+       'Total day calls', 'Total day charge', 'Total eve minutes',
+       'Total eve calls', 'Total eve charge', 'Total night minutes',
+       'Total night calls', 'Total night charge', 'Total intl minutes',
+       'Total intl calls', 'Total intl charge', 'Customer service calls',
+       'Churn'],
+      dtype='object') 
+
+#5 команда на просмотр общей информации
+
+print(name.info()) - возвращает всю информацию по датафрейму
+
+>>> print(df.info())
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 3333 entries, 0 to 3332
+Data columns (total 20 columns):
+State                     3333 non-null object
+Account length            3333 non-null int64
+Area code                 3333 non-null int64
+International plan        3333 non-null object
+Voice mail plan           3333 non-null object
+Number vmail messages     3333 non-null int64
+Total day minutes         3333 non-null float64
+Total day calls           3333 non-null int64
+Total day charge          3333 non-null float64
+Total eve minutes         3333 non-null float64
+Total eve calls           3333 non-null int64
+Total eve charge          3333 non-null float64
+Total night minutes       3333 non-null float64
+Total night calls         3333 non-null int64
+Total night charge        3333 non-null float64
+Total intl minutes        3333 non-null float64
+Total intl calls          3333 non-null int64
+Total intl charge         3333 non-null float64
+Customer service calls    3333 non-null int64
+Churn                     3333 non-null bool
+dtypes: bool(1), float64(8), int64(8), object(3)
+memory usage: 498.1+ KB
+None
+
+bool, int64, float64 и object — это типы признаков. Видим, что 1 признак — логический (bool), 
+3 признака имеют тип object и 16 признаков — числовые. Также с помощью метода info удобно
+быстро посмотреть на пропуски в данных, в нашем случае их нет, в каждом столбце по 3333 
+наблюдения.
+
+#6 изменение типа колонки
+
+Изменить тип колонки можно с помощью метода astype. Применим этот метод к признаку Churn и 
+переведём его в int64:
+
+#7 Метод describe
+
+Метод describe показывает основные статистические характеристики данных по каждому числовому 
+признаку (типы int64 и float64):число непропущенных значений, среднее, стандартное отклонение,
+диапазон, медиану, 0.25 и 0.75 квартили.
+
+#8 Статистика по нечисловым признакам
+
+Чтобы посмотреть статистику по нечисловым признакам, нужно явно указать интересующие нас типы в
+параметре include.
+
+df.describe(include=['object', 'bool'])
+
+из пунка 5 нам известно что в датафрейме есть 3 типа объектов и 1 логический тип bool.
+
+>>> df.describe(include=['object', 'bool'])
+       State International plan Voice mail plan
+count   3333               3333            3333
+unique    51                  2               2
+top       WV                 No              No
+freq     106               3010            2411
+>>> 
+
+#9 рраспределение данных
+
+Для категориальных (тип object) и булевых (тип bool) признаков можно воспользоваться методом 
+value_counts. Посмотрим на распределение данных по нашей целевой переменной — Churn:
+
+>>> df['Churn'].value_counts()
+0    2850
+1     483
+Name: Churn, dtype: int64
+>>> 
+
+господа! мы потеряли 483 клиента.
+
+автор учебного курса также дал хороший хинт что по факту возвращаемых данных:
+2850 пользователей из 3333 — лояльные, значение переменной Churn у них — 0.
+
+удивиительно что можно сделать с помощью 1 и 0 если привоить их переменной.
+
+https://habrahabr.ru/company/ods/blog/322626/
+
+#10 Сортировка
+
+DataFrame можно отсортировать по значению какого-нибудь из признаков. В нашем случае, например, по 
+Total day charge (ascending=False для сортировки по убыванию):
+
+df.sort_values(by='Total day charge'),        # сортировка значение по (признаку)
+
+Сортировать можно и по группе столбцов:
+
+# 11 индексация и извлечение данных
+
+Для извлечения отдельного столбца можно использовать конструкцию вида DataFrame['Name']. Воспользуемся этим
+для ответа на вопрос: какова доля людей нелояльных пользователей в нашем датафрейме?
+
+>>> df['Churn'].mean()
+0.14491449144914492
+>>> 
+
+Очень удобной является логическая индексация DataFrame по одному столбцу. Выглядит она следующим образом:
+ df[P(df['Name'])], где P — это некоторое логическое условие, проверяемое для каждого элемента столбца
+ Name. 
+ 
+Итогом такой индексации является DataFrame, состоящий только из строк, удовлетворяющих условию P по 
+ столбцу Name.
+
+Воспользуемся этим для ответа на вопрос: каковы средние значения числовых признаков среди нелояльных 
+пользователей?
+
+>>> df[df['Churn'] == 1].mean()
+Account length            102.664596
+Area code                 437.817805
+Number vmail messages       5.115942
+Total day minutes         206.914079
+Total day calls           101.335404
+Total day charge           35.175921
+Total eve minutes         212.410145
+Total eve calls           100.561077
+Total eve charge           18.054969
+Total night minutes       205.231677
+Total night calls         100.399586
+Total night charge          9.235528
+Total intl minutes         10.700000
+Total intl calls            4.163561
+Total intl charge           2.889545
+Customer service calls      2.229814
+Churn                       1.000000
+dtype: float64
+
+а теперь посмотрим средние значения среди лояльных клиентов (если 1 = отток клиента, то 0 - его сохранение)
+
+>>> df[df['Churn'] == 0].mean()
+Account length            100.793684
+Area code                 437.074737
+Number vmail messages       8.604561
+Total day minutes         175.175754
+Total day calls           100.283158
+Total day charge           29.780421
+Total eve minutes         199.043298
+Total eve calls           100.038596
+Total eve charge           16.918909
+Total night minutes       200.133193
+Total night calls         100.058246
+Total night charge          9.006074
+Total intl minutes         10.158877
+Total intl calls            4.532982
+Total intl charge           2.743404
+Customer service calls      1.449825
+Churn                       0.000000
+dtype: float64
+>>> 
+
+Скомбинировав предыдущие два вида индексации, ответим на вопрос: сколько в среднем в течение дня 
+разговаривают по телефону нелояльные пользователи?
+
+>>> df[df['Churn'] == 1]['Total day minutes'].mean()  
+206.91407867494814
+
+а лояльные?
+
+>>> df[df['Churn'] == 0]['Total day minutes'].mean()
+175.17575438596492
+
+получается что лояльные клиенты разговаривают меньше, чем нелояльные - о.0
+
+Какова максимальная длина международных звонков среди лояльных пользователей (Churn == 0), не пользующихся
+услугой международного роуминга ('International plan' == 'No')?
+
+>>> df[(df['Churn'] == 0) & (df['International plan'] == 'No')]['Total intl minutes'].max()
+18.899999999999999
+>>> 
+
+а среди нелояльных?
+
+>>> df[(df['Churn'] == 1) & (df['International plan'] == 'No')]['Total intl minutes'].max()
+18.300000000000001
+>>> 
+
+Датафреймы можно индексировать как по названию столбца или строки, так и по порядковому номеру. Для
+индексации по названию используется метод loc, по номеру — iloc.
+
+В первом случае мы говорим «передай нам значения шести строк от 0 до 1 в столбцах от State до Area code», 
+а во втором — «передай нам значения первых пяти строк в первых трёх столбцах».
+
+Хозяйке на заметку: когда мы передаём slice object в iloc, датафрейм слайсится как обычно. Однако в случае
+с loc учитываются и начало, и конец слайса (ссылка на документацию, спасибо arkane0906 за замечание).
+
+>>> df.loc[0:5, 'State':'Area code']	# возвращает значение 6 строк в столбцах от Стате до Ареа 
+  State  Account length  Area code
+0    KS             128        415
+1    OH             107        415
+2    NJ             137        415
+3    OH              84        408
+4    OK              75        415
+5    AL             118        510
+>>> 
+
+>>> df.iloc[0:5, 0:3]                            # возвращает значение первых пяти строк в первых 3 столбцах
+  State  Account length  Area code
+0    KS             128        415
+1    OH             107        415
+2    NJ             137        415
+3    OH              84        408
+4    OK              75        415
+>>> 
+
+Если нам нужна первая или последняя строчка датафрейма, пользуемся конструкцией df[:1] или df[-1:]:
+
+>>> df[-1:]                                      # последняя строка дата фрейма
+     State  Account length  Area code International plan Voice mail plan  \
+3332    TN              74        415                 No             Yes   
+
+      Number vmail messages  Total day minutes  Total day calls  \
+3332                     25              234.4              113   
+
+      Total day charge  Total eve minutes  Total eve calls  Total eve charge  \
+3332             39.85              265.9               82              22.6   
+
+      Total night minutes  Total night calls  Total night charge  \
+3332                241.4                 77               10.86   
+
+      Total intl minutes  Total intl calls  Total intl charge  \
+3332                13.7                 4                3.7   
+
+      Customer service calls  Churn  
+3332                       0      0  
+>>> len(df)
+3333
+>>> df[111:112]
+    State  Account length  Area code International plan Voice mail plan  \
+111    MA             103        415                 No              No   
+
+     Number vmail messages  Total day minutes  Total day calls  \
+111                      0              185.0              117   
+
+     Total day charge  Total eve minutes  Total eve calls  Total eve charge  \
+111             31.45              223.3               94             18.98   
+
+     Total night minutes  Total night calls  Total night charge  \
+111                222.8                 91               10.03   
+
+     Total intl minutes  Total intl calls  Total intl charge  \
+111                12.6                 2                3.4   
+
+     Customer service calls  Churn  
+111                       2      0  
+>>> 
+
+# 12 Применение функций к ячейкам, столбцам и строкам
+
+Применение функции к каждому столбцу: фукнция apply
+
+df.apply(pr.max) - найти максимум для строки в датафейме df с использованием фукнционала Numpy
+
+>>> df.apply(pr.max)
+State                        WY
+Account length              243
+Area code                   510
+International plan          Yes
+Voice mail plan             Yes
+Number vmail messages        51
+Total day minutes         350.8
+Total day calls             165
+Total day charge          59.64
+Total eve minutes         363.7
+Total eve calls             170
+Total eve charge          30.91
+Total night minutes         395
+Total night calls           175
+Total night charge        17.77
+Total intl minutes           20
+Total intl calls             20
+Total intl charge           5.4
+Customer service calls        9
+Churn                         1
+dtype: object
+
+Метод apply можно использовать и для того, чтобы применить функцию к каждой строке.
+Для этого нужно указать axis=1.
+
+>>> df.apply(pr.min)
+State                       AK
+Account length               1
+Area code                  408
+International plan          No
+Voice mail plan             No
+Number vmail messages        0
+Total day minutes            0
+Total day calls              0
+Total day charge             0
+Total eve minutes            0
+Total eve calls              0
+Total eve charge             0
+Total night minutes       23.2
+Total night calls           33
+Total night charge        1.04
+Total intl minutes           0
+Total intl calls             0
+Total intl charge            0
+Customer service calls       0
+Churn                        0
+dtype: object
+>>> 
+
+(!) Но
+
+df.apply(pr.sum, axis = 1)
+
+возвращает дикое количество исключений и ругаеться что такой строки (axis) нет 
+
+# Применение функции к каждой ячейке столбца: map
+
+Например, метод map можно использовать для замены значений в колонке, передав ему в качестве аргумента словарь
+вида {old_value: new_value}:
+
+это выглядит так:
+
+>>> d = {'No' : False, 'Yes' : True}             # на что меняем значения в колонке
+>>> df['International plan'] = df['International plan'].map(d)      # в какой колонке меняем значения (типа .format)
+>>> df.head()                                    # возвращает всю информацию по фрейму с заменой значений в International plan
+  State  Account length  Area code  International plan Voice mail plan  \
+0    KS             128        415               False             Yes   
+1    OH             107        415               False             Yes   
+2    NJ             137        415               False              No   
+3    OH              84        408                True              No   
+4    OK              75        415                True              No   
+
+
+Аналогичную операцию можно провернуть с помощью метода replace:
+
+>>> d = {'No' : False, 'Yes' : True}
+>>> df = df.replace({'Voice mail plan': d})      #
+>>> df.head()
+  State  Account length  Area code  International plan  Voice mail plan  \
+0    KS             128        415               False             True   
+1    OH             107        415               False             True   
+2    NJ             137        415               False            False   
+3    OH              84        408                True            False   
+4    OK              75        415                True            False   
+
+# 13 Группировка данных
+
+В общем случае группировка данных в Pandas выглядит следующим образом:
+
+
+К датафрейму применяется метод groupby, разделяет данные по grouping_columns – признаку или набору признаков.
+
+Выбираем нужные нам столбцы (columns_to_show).
+К полученным группам применяется функция или несколько функций.
+Группирование данных в зависимости от значения признака Churn и вывод статистик по трём столбцам в каждой группе.
+
+>>> df.groupby(by=grouping_columns)[columns_to_show].function()
+
+датафрей.сгруппировать.методом = разделить на столбы [какие столбцы показать]. исполнит для всего датафрейма
+  
+columns_to_show = ['Total day minutes', 'Total eve minutes', 'Total night minutes']
+
+указываем какие столбы должен возвращать метод
+
+df.groupby(['Churn'])[columns_to_show].describe(percentiles=[])
+
+сгруппировать данные в датафрейме полученные методом .групбай (данные из метода) относительно Churn .
+
+на практике это выглядит так
+
+>>> columns_to_show = ['Total day minutes', 'Total eve minutes', 'Total night minutes']      #  см коммент на 422
+>>> df.groupby(['Churn'])[columns_to_show].describe(percentiles=[])
+      Total day minutes                                            \
+                  count        mean        std  min    50%    max   
+Churn                                                               
+0                2850.0  175.175754  50.181655  0.0  177.2  315.6   
+1                 483.0  206.914079  68.997792  0.0  217.6  350.8   
+
+      Total eve minutes                                             \
+                  count        mean        std   min    50%    max   
+Churn                                                                
+0                2850.0  199.043298  50.292175   0.0  199.6  361.8   
+1                 483.0  212.410145  51.728910  70.9  211.3  363.7   
+
+      Total night minutes                                              
+                    count        mean        std   min     50%    max  
+Churn                                                                  
+0                  2850.0  200.133193  51.105032  23.2  200.25  395.0  
+1                   483.0  205.231677  47.132825  47.4  204.80  354.9  
+>>> 
+
+df.groupby(df=grouping_colums)[columns_to_show].function()  - совсем необязательная строка кода в алгоритме.
+
+так что применение метода выглядит технически так:
+
+1. создаём ссылку в симтемной таблица на объекты, которые хотим обработать методом:
+
+columns_to_show = ['Total day minutes', 'Total eve minutes', 'Total night minutes'] 
+
+2. вооружившись этой сслыкой применяем сам метод.
+
+df.groupby(['Churn'])[columns_to_show].describe(percentiles=[])
+     
+и вуаля, интерпретатор возвращает представление объектов [columns_to_show] в отношении признака (['Churn'])
+
+(!) Пример,
+
+Сделаем то же самое, но немного по-другому, передав в agg список функций (фукнций из нумру по ссылка pr):
+
+>>> columns_to_show = ['Total day minutes', 'Total eve minutes', 'Total night minutes']
+>>> df.groupby(['Churn'])[columns_to_show].agg([pr.mean, pr.std, pr.min, pr.max])
+      Total day minutes                        Total eve minutes             \
+                   mean        std amin   amax              mean        std   
+Churn                                                                         
+0            175.175754  50.181655  0.0  315.6        199.043298  50.292175   
+1            206.914079  68.997792  0.0  350.8        212.410145  51.728910   
+
+                   Total night minutes                          
+       amin   amax                mean        std  amin   amax  
+Churn                                                           
+0       0.0  361.8          200.133193  51.105032  23.2  395.0  
+1      70.9  363.7          205.231677  47.132825  47.4  354.9  
+>>> 
+
+# 14 Сводные таблицы
+
+Допустим, мы хотим посмотреть, как наблюдения в нашей выборке распределены в контексте двух признаков — Churn
+и International plan. Для этого мы можем построить таблицу сопряженности, воспользовавшись методом crosstab:
+
+>>> pd.crosstab(df['Churn'], df['International plan'])
+International plan  False  True 
+Churn                           
+0                    2664    186
+1                     346    137
+>>> 
+
+>>> pd.crosstab(df['Churn'], df['Voice mail plan'], normalize=True)
+Voice mail plan        No       Yes
+Churn                              
+0                0.602460  0.252625
+1                0.120912  0.024002
+>>>
+
+Мы видим, что большинство пользователей лояльны и при этом пользуются дополнительными услугами 
+(международного роуминга / голосовой почты). (лояльный 0 = нелояльные 1)
+
+Продвинутые пользователи Excel наверняка вспомнят о такой фиче, как сводные таблицы (pivot tables). 
+В Pandas за сводные таблицы отвечает метод pivot_table, который принимает в качестве параметров:
+
+values – список переменных, по которым требуется рассчитать нужные статистики,
+index – список переменных, по которым нужно сгруппировать данные,
+aggfunc — то, что нам, собственно, нужно посчитать по группам — сумму, среднее, максимум, минимум или что-то ещё.
+
+Давайте посмотрим среднее число дневных, вечерних и ночных звонков для разных Area code:
+
+>>> df.pivot_table(['Total day calls', 'Total eve calls', 'Total night calls'], ['Area code'], aggfunc='mean').head(10)
+           Total day calls  Total eve calls  Total night calls
+Area code                                                     
+408             100.496420        99.788783          99.039379
+415             100.576435       100.503927         100.398187
+510             100.097619        99.671429         100.601190
+>>> 
+
+Это звучит так:
+
+свести в сводную таблицу ([столбцы]) [по переменной] (по признаку) с выполнением функции name из NumPy
+в данном случае эта фукнция: возвращает среднее значение элементов массива.
+
+>>> df.pivot_table(['Total day calls', 'Total eve calls', 'Total night calls'], ['International plan'], aggfunc='min').head(100)
+                    Total day calls  Total eve calls  Total night calls
+International plan                                                     
+False                             0                0                 33
+True                             42               50                 48
+>>> 
+
+# 15 Преобразование датафреймов
+
+Как и многое другое в Pandas, добавление столбцов в DataFrame осуществимо несколькими способами.
+
+Например, мы хотим посчитать общее количество звонков для всех пользователей.
+Создадим объект total_calls типа Series и вставим его в датафрейм:
+
+>>> total_calls = df['Total day calls'] + df['Total eve calls'] + df['Total night calls'] + df['Total intl calls']
+>>> df.insert(loc=len(df.columns), column='Total calls', value=total_calls)
+>>> # loc - номер столбца, после которого нужно вставить данный Series
+... # мы указали len(df.columns), чтобы вставить его в самом конце
+... df.head()
+  State  Account length  Area code  International plan Voice mail plan  \
+0    KS             128        415               False             Yes   
+1    OH             107        415               False             Yes   
+2    NJ             137        415               False              No   
+3    OH              84        408                True              No   
+4    OK              75        415                True              No   
+
+   Number vmail messages  Total day minutes  Total day calls  \
+0                     25              265.1              110   
+1                     26              161.6              123   
+2                      0              243.4              114   
+3                      0              299.4               71   
+4                      0              166.7              113   
+
+   Total day charge  Total eve minutes     ...       Total eve charge  \
+0             45.07              197.4     ...                  16.78   
+1             27.47              195.5     ...                  16.62   
+2             41.38              121.2     ...                  10.30   
+3             50.90               61.9     ...                   5.26   
+4             28.34              148.3     ...                  12.61   
+
+   Total night minutes  Total night calls  Total night charge  \
+0                244.7                 91               11.01   
+1                254.4                103               11.45   
+2                162.6                104                7.32   
+3                196.9                 89                8.86   
+4                186.9                121                8.41   
+
+   Total intl minutes  Total intl calls  Total intl charge  \
+0                10.0                 3               2.70   
+1                13.7                 3               3.70   
+2                12.2                 5               3.29   
+3                 6.6                 7               1.78   
+4                10.1                 3               2.73   
+
+   Customer service calls  Churn  Total calls  
+0                       1      0          303  
+1                       1      0          332  
+2                       0      0          333  
+3                       2      0          255  
+4                       3      0          359  
+
+[5 rows x 21 columns]
+
+>> total_calls = df['Total day calls'] + df['Total eve calls'] + df['Total night calls'] + df['Total intl calls']
+>>> df.insert(loc=len(df.columns), column='Total calls', value=total_calls)
+>>> # loc - номер столбца, после которого нужно вставить данный Series
+... # мы указали len(df.columns), чтобы вставить его в самом конце
+... df.head()
+
+обрати внимание мой милый и повинный на 100500% в брони ереси еретик.
+
+что бы создать объект total_cals - нужпо прописать его по отношению ко всем объектам класса "calls"
+
+Добавить столбец из имеющихся можно и проще, не создавая промежуточных Series:
+
+>>> df['Total charge'] = df['Total day charge'] + df['Total eve charge'] + df['Total night charge'] + df['Total intl charge']
+>>> df.head()
+  State  Account length  Area code  International plan Voice mail plan  \
+0    KS             128        415               False             Yes   
+1    OH             107        415               False             Yes   
+2    NJ             137        415               False              No   
+3    OH              84        408                True              No   
+4    OK              75        415                True              No   
+
+   Number vmail messages  Total day minutes  Total day calls  \
+0                     25              265.1              110   
+1                     26              161.6              123   
+2                      0              243.4              114   
+3                      0              299.4               71   
+4                      0              166.7              113   
+
+   Total day charge  Total eve minutes      ...       Total night minutes  \
+0             45.07              197.4      ...                     244.7   
+1             27.47              195.5      ...                     254.4   
+2             41.38              121.2      ...                     162.6   
+3             50.90               61.9      ...                     196.9   
+4             28.34              148.3      ...                     186.9   
+
+   Total night calls  Total night charge  Total intl minutes  \
+0                 91               11.01                10.0   
+1                103               11.45                13.7   
+2                104                7.32                12.2   
+3                 89                8.86                 6.6   
+4                121                8.41                10.1   
+
+   Total intl calls  Total intl charge  Customer service calls  Churn  \
+0                 3               2.70                       1      0   
+1                 3               3.70                       1      0   
+2                 5               3.29                       0      0   
+3                 7               1.78                       2      0   
+4                 3               2.73                       3      0   
+
+   Total calls  Total charge  
+0          303         75.56  
+1          332         59.24  
+2          333         62.29  
+3          255         66.80  
+4          359         52.09  
+
+[5 rows x 22 columns]
+>>> 
+
+Чтобы удалить столбцы или строки, воспользуйтесь методом drop, передавая в качестве аргумента нужные индексы 
+и требуемое значение параметра axis (1, если удаляете столбцы, и ничего или 0, если удаляете строки):
+
+>>> df = df.drop(['Total charge', 'Total calls'], axis=1)       # избавляемся от созданных только что столбцов
+>>> df.drop([1, 2]).head()										# а вот так можно удалить строчки
+  State  Account length  Area code  International plan Voice mail plan  \
+0    KS             128        415               False             Yes   
+3    OH              84        408                True              No   
+4    OK              75        415                True              No   
+5    AL             118        510                True              No   
+6    MA             121        510               False             Yes   
+
+   Number vmail messages  Total day minutes  Total day calls  \
+0                     25              265.1              110   
+3                      0              299.4               71   
+4                      0              166.7              113   
+5                      0              223.4               98   
+6                     24              218.2               88   
+
+   Total day charge  Total eve minutes  Total eve calls  Total eve charge  \
+0             45.07              197.4               99             16.78   
+3             50.90               61.9               88              5.26   
+4             28.34              148.3              122             12.61   
+5             37.98              220.6              101             18.75   
+6             37.09              348.5              108             29.62   
+
+   Total night minutes  Total night calls  Total night charge  \
+0                244.7                 91               11.01   
+3                196.9                 89                8.86   
+4                186.9                121                8.41   
+5                203.9                118                9.18   
+6                212.6                118                9.57   
+
+   Total intl minutes  Total intl calls  Total intl charge  \
+0                10.0                 3               2.70   
+3                 6.6                 7               1.78   
+4                10.1                 3               2.73   
+5                 6.3                 6               1.70   
+6                 7.5                 7               2.03   
+
+   Customer service calls  Churn  
+0                       1      0  
+3                       2      0  
+4                       3      0  
+5                       0      0  
+6                       3      0  
+>>> 
+
+# 16 4. Первые попытки прогнозирования оттока
+
+Посмотрим, как отток связан с признаком "Подключение международного роуминга" (International plan). Сделаем
+это с помощью сводной таблички crosstab, а также путем иллюстрации с Seaborn (как именно строить такие
+картинки и анализировать с их помощью графики – материал следующей статьи)
+
+>>> pd.crosstab(df['Churn'], df['International plan'], margins=True)
+International plan  False  True   All
+Churn                                
+0                    2664   186  2850
+1                     346   137   483
+All                  3010   323  3333
+>>> 
+
+Видим, что когда роуминг подключен, доля оттока намного выше – интересное наблюдение! Возможно, большие и
+плохо контролируемые траты в роуминге очень конфликтогенны и приводят к недовольству клиентов оператора и,
+соответственно, к их оттоку. (тоже мне капитан очевидность)
+
+Далее посмотрим на еще один важный признак – "Число обращений в сервисный центр" (Customer service calls).
+Также построим сводную таблицу и картинку.
+
+>>> pd.crosstab(df['Churn'], df['Customer service calls'], margins=True)	# ещё один прогноз
+Customer service calls    0     1    2    3    4   5   6  7  8  9   All
+Churn                                                                  
+0                       605  1059  672  385   90  26   8  4  1  0  2850
+1                        92   122   87   44   76  40  14  5  1  2   483
+All                     697  1181  759  429  166  66  22  9  2  2  3333
+>>> 
+
+Может быть, по сводной табличке это не так хорошо видно (или скучно ползать взглядом по строчкам с цифрами),
+а вот картинка красноречиво свидетельствует о том, что доля оттока сильно возрастает начиная с 4 звонков в 
+сервисный центр. (спорный вывод на самом деле то)
+
+Добавим теперь в наш DataFrame бинарный признак — результат сравнения Customer service calls > 3.
+И еще раз посмотрим, как он связан с оттоком.
+
+>>> df['Many_service_calls'] = (df['Customer service calls'] > 3).astype('int')  # добавляем новый бинарный признак
+>>> pd.crosstab(df['Many_service_calls'], df['Churn'], margins=True)			 # строим прогноз на его основании
+Churn                  0    1   All
+Many_service_calls                 
+0                   2721  345  3066
+1                    129  138   267
+All                 2850  483  3333
+>>> 
+
+Объединим рассмотренные выше условия и построим сводную табличку для этого объединения и оттока.
+
+>>> pd.crosstab(df['Many_service_calls'] & df['International plan'] , df['Churn']) # сводим полученные данные
+Churn     0    1
+row_0           
+False  2841  464
+True      9   19
+>>> 
+
+(злесь мы свели в сводную таблицу инормацию от бинарного признака по тех.поддержке с данными по роумингу.)
+
+Значит, прогнозируя лояльность клиента в случае, когда число звонков в сервисный центр меньше 4 и не 
+подключен роуминг (и прогнозируя отток – в противном случае), можно ожидать процент "угадывания 
+лояльности клиента" около 85.8% (ошибаемся всего 464 + 9 раз). Эти 85.8%, которые мы получили
+с помощью очень простых рассуждений – это неплохая отправная точка (baseline) для дальнейших 
+моделей машинного обучения, которые мы будем строить.
+
+В целом до появления машинного обучения процесс анализа данных выглядел примерно так. Прорезюмируем:
+
+Доля лояльных клиентов в выборке – 85.5%. 
+
+Самая наивная модель, ответ которой "клиент всегда лоялен" на подобных данных будет угадывать примерно в 85.5%
+случаев. То есть доли правильных ответов (accuracy) последующих моделей должны быть как минимум не меньше, а
+лучше, значительно выше этой цифры;
+
+С помощью простого прогноза, который условно можно выразить такой формулой:
+
+"International plan = False & Customer Service calls < 4 => Churn = 0, else Churn = 1", 
+
+можно ожидать долю угадываний 85.8%, что еще чуть выше 85.5%. Впоследствии мы поговорим о деревьях решений и
+разберемся, как находить подобные правила автоматически на основе только входных данных;
+
+Эти два бейзлайна мы получили без всякого машинного обучения, и они служат отправной точной для наших 
+последующих моделей. Если окажется, что мы громадными усилиями увеличиваем долю правильных ответов 
+всего, скажем, на 0.5%, то возможно, мы что-то делаем не так, и достаточно ограничиться простой
+моделью из двух условий;
+
+Перед обучением сложных моделей рекомендуется немного покрутить данные и проверить простые предположения.
+Более того, в бизнес-приложениях машинного обучения чаще всего начинают именно с простых решений, а 
+потом экспериментируют с их усложнениями.
+
+ага, солнышко, ты права - только если один момент, в качество отправной точки ты взъяла рубеж - 4 звонка, а
+я вот например с этим рубежом не согласен,и моя экстрополяция и последующая корреляция данных будет другой.
+
+приеду с 3х дневной пьянки для бывших офицеров и приравнненых к ним лиц - посчитаю с другого рубежа.
+
+
+
+
+
+
+
+
+
+
+
