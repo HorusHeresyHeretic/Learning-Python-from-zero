@@ -44,3 +44,5 @@ Lesson 0 (которого нет) это ныне утраченные файл
 Lesson 1 Delete Tutorial это файлы полученные в ходе изучения учебника Шапошникова, который я рекомендую к прочтению перед первыми попытками "почитать книжку Лутца или Дрейка". http://younglinux.info/sites/default/files/python_structured_programming.pdf
 
 lesson 2-7 это файлы полученные при детальном изучении 4ого издания Лутца, которое все всем советуют читать: https://drive.google.com/file/d/0B2Y1ImVJcHANNW8tY05DTW1rNDQ/view
+
+Lesson 8 это место, на котором можно выдохнуть - первые осмысленные шаги по учебному курсу OpenDataScience.
