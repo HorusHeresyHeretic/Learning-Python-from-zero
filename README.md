@@ -29,19 +29,15 @@
 
 # Работа с исключениями.
 
-*Python любит длинные шапки import as... и если вы собираетесть работать с дополнительными библиотеками - то понимание того, как работает язык, просто необходимо для обработки исключений при работе с ними. Прикладным программистам в этом отношении проще - список возможных исключений, которые они получают, как правило, ограничен стандартной библиотекой Python и, в теории, возможно сразу переходить к изучению предметной области минуя длительный процесс погружения в "смысл языка".* 
+*Python любит длинные шапки import as... и если вы собираетесть работать с дополнительными библиотеками - то понимание того, как работает язык, просто необходимо для обработки исключений при работе с ними. Прикладным программистам в этом отношении проще - список возможных исключений, которые они получают, как правило, ограничен стандартной библиотекой Python и, в теории, возможно сразу переходить к изучению предметной области минуя длительный процесс погружения в "смысл языка". Но, лучше читать.* 
 
 **Но, лучше читать** 
-1. [Шапошникова](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-1).
-2. Первые [100 страниц](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-2) Лутца.
-3. [Следующую](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-3) главу  
-4. Как работают [числа и точность](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-4).
-5. Как работает [системная таблица](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-5).
-6. Как пользоваться [форматированием](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-6) и спискам.
-7. 
-
-
-
-
-
+1. Учебник [Шапошникова](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-1).
+2. Лутц 4 издание [1-3 глава](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-2).
+3. Лутц 4 издание [4 глава](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-3).
+4. Лутц 4 издание [5 глава](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-4).
+5. Лутц 4 издание [6 глава](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-5).
+6. Лутц [7 и 8 глава](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-6)
+7. Лутц [9 глава](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-7)
+8. Ученье - [свет](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-8).
 
