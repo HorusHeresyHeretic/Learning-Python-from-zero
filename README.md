@@ -39,5 +39,3 @@
 5. Лутц 4 издание [6 глава](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-5).
 6. Лутц [7 и 8 глава](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-6)
 7. Лутц [9 глава](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-7)
-8. Ученье - [свет](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-8).
-
