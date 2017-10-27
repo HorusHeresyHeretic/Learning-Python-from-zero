@@ -31,7 +31,14 @@
 
 *Python любит длинные шапки import as... и если вы собираетесть работать с дополнительными библиотеками - то понимание того, как работает язык, просто необходимо для обработки исключений при работе с ними. Прикладным программистам в этом отношении проще - список возможных исключений, которые они получают, как правило, ограничен стандартной библиотекой Python и, в теории, возможно сразу переходить к изучению предметной области минуя длительный процесс погружения в "смысл языка".* 
 
-**На практике, обязательно нужно знать:** 
+**Но, лучше читать** 
+1. [Шапошникова](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-1).
+2. Первые [100 страниц](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-2) Лутца.
+3. [Следующую](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-3) главу  
+4. Как работают [числа и точность](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-4).
+5. Как работает [системная таблица](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-5).
+6. Как пользоваться [форматированием](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-6) и спискам.
+7. 
 
 
 
