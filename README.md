@@ -6,13 +6,7 @@
 
 # Оглавление.
 
-1. Тру учебник [Шапошникова](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-1).
-2. Лутц 4 издание [1-3 глава](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-2).
-3. Лутц 4 издание [4 глава](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-3).
-4. Лутц 4 издание [5 глава](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-4).
-5. Лутц 4 издание [6 глава](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-5).
-6. Лутц [7 и 8 глава](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-6)
-7. Лутц [9 глава](https://github.com/HorusHeresyHeretic/Learning-Python-from-zero/tree/master/Lesson-7)
+*К тому моменту, как я решил сделать из этого пособие - часть файлов перепуталась, часть потерялась.*
 
 # Совет.
 
